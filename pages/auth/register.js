@@ -7,8 +7,11 @@ import Auth from "layouts/Auth.js";
 
 export default function Register() {
   const [data, setData] = useState({ email: "", password: "" });
+  const [status, setStatus] = useState("");
 
-  const baseUrl = "https://mongo-realm-worker.umermib.workers.dev/api/users";
+  const baseUrl =
+    "https://cors-anywhere.herokuapp.com/https://mongo-realm-worker.umermib.workers.dev/api/users";
+  // const baseUrl = "http://localhost:8787/api/users";
 
   const onChange = (e) => setData({ ...data, [e.target.name]: e.target.value });
 
@@ -26,8 +29,10 @@ export default function Register() {
         }
       );
       setData({ email: "", password: "" });
+      setStatus("Register Success");
     } catch (error) {
       setData({ email: "", password: "" });
+      setStatus("Register Fail");
     }
   };
 
@@ -64,6 +69,8 @@ export default function Register() {
               <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
                 <div className="text-blueGray-400 text-center mb-3 font-bold">
                   <small>Or sign up with credentials</small>
+
+                  {!!status && <div>status:{status}</div>}
                 </div>
                 <form onSubmit={handleSubmit}>
                   <div className="relative w-full mb-3">

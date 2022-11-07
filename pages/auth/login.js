@@ -8,18 +8,31 @@ import axios from "axios";
 
 export default function Login() {
   const [data, setData] = useState({ email: "", password: "" });
+  const [status, setStatus] = useState("");
 
-  const baseUrl = "https://mongo-realm-worker.umermib.workers.dev/api/users";
+  const baseUrl =
+    "https://cors-anywhere.herokuapp.com/https://mongo-realm-worker.umermib.workers.dev/api/users";
+  // const baseUrl =
+  //   "https://cors-anywhere.herokuapp.com/http://localhost:8787/api/users";
 
   const onChange = (e) => setData({ ...data, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
+    setStatus("");
     e.preventDefault();
     try {
-      await axios.get(baseUrl, { params: { ...data } });
+      await axios.get(baseUrl, {
+        params: { ...data },
+        headers: {
+          Authorization:
+            "En70zNizJ0bKZ1L3IKAZswenT2uY7s8NHjudy804hyPrRVYp0hJXcp2ncM8VHHuq",
+        },
+      });
       setData({ email: "", password: "" });
+      setStatus("Login Success");
     } catch (error) {
       setData({ email: "", password: "" });
+      setStatus("Login fail");
     }
   };
 
@@ -56,6 +69,8 @@ export default function Login() {
               <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
                 <div className="text-blueGray-400 text-center mb-3 font-bold">
                   <small>Or sign in with credentials</small>
+
+                  {!!status && <div>status:{status}</div>}
                 </div>
                 <form onSubmit={handleSubmit}>
                   <div className="relative w-full mb-3">
@@ -107,7 +122,7 @@ export default function Login() {
                   <div className="text-center mt-6">
                     <button
                       className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
-                      type="button"
+                      type="submit"
                     >
                       Sign In
                     </button>
