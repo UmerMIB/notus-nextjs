@@ -1,10 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
 
 // layout for page
 
 import Auth from "layouts/Auth.js";
 
 export default function Register() {
+  const [data, setData] = useState({ email: "", password: "" });
+
+  const baseUrl = "https://mongo-realm-worker.umermib.workers.dev/api/users";
+
+  const onChange = (e) => setData({ ...data, [e.target.name]: e.target.value });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post(
+        baseUrl,
+        { ...data },
+        {
+          headers: {
+            Authorization:
+              "En70zNizJ0bKZ1L3IKAZswenT2uY7s8NHjudy804hyPrRVYp0hJXcp2ncM8VHHuq",
+          },
+        }
+      );
+      setData({ email: "", password: "" });
+    } catch (error) {
+      setData({ email: "", password: "" });
+    }
+  };
+
   return (
     <>
       <div className="container mx-auto px-4 h-full">
@@ -39,21 +65,7 @@ export default function Register() {
                 <div className="text-blueGray-400 text-center mb-3 font-bold">
                   <small>Or sign up with credentials</small>
                 </div>
-                <form>
-                  <div className="relative w-full mb-3">
-                    <label
-                      className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                      htmlFor="grid-password"
-                    >
-                      Name
-                    </label>
-                    <input
-                      type="email"
-                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="Name"
-                    />
-                  </div>
-
+                <form onSubmit={handleSubmit}>
                   <div className="relative w-full mb-3">
                     <label
                       className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
@@ -65,6 +77,9 @@ export default function Register() {
                       type="email"
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Email"
+                      value={data.email}
+                      onChange={onChange}
+                      name="email"
                     />
                   </div>
 
@@ -79,6 +94,9 @@ export default function Register() {
                       type="password"
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Password"
+                      value={data.password}
+                      onChange={onChange}
+                      name="password"
                     />
                   </div>
 
@@ -105,7 +123,7 @@ export default function Register() {
                   <div className="text-center mt-6">
                     <button
                       className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
-                      type="button"
+                      type="submit"
                     >
                       Create Account
                     </button>
